@@ -1,0 +1,8 @@
+/* animacja 2 */
+$sciany = rectangle(200, 100, 400, 400, color(0,255,0));
+$dach = triangle(150, 100, 400, 50, 650, 100, color(255,0,0));
+$drzwi = rectangle(350, 300, 100, 200, color(0,0,0));
+$okno = rectangle(250, 150, 100, 100, color(0,0,255));
+object $house { $sciany, $dach, $drzwi, $okno, move(200, 0) * $okno};
+animation $a {loop:yes, 0:$house, 1:rotate(30), 2:rotate(-30)};
+animate $a;

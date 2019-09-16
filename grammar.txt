@@ -1,0 +1,52 @@
+
+(* Language to create grafics scenes *)
+program = { ( white_chars , command , white_chars , ";") | ( white_chars , comment ) } , white_chars;
+
+(* Commands *)
+command = simple | complex | animation | show | animate;
+simple = variable , white_chars , "=" , white_chars , rt_simple;
+rt_simple = {transformation , white_chars , "*" , white_chars } , ( object | variable );
+complex = "object " , white_chars , variable , white_chars , "{" , white_chars , rt_simple, { white_chars , "," , white_chars , rt_simple } , white_chars , "}";
+animate = "animate " , white_chars , variable;
+show = "show " , white_chars , variable;
+
+(* Useful definifions *)
+variable = "$" , letter , {letter | digit | "_"};
+comment = "/*" , { "0x00" .. "0xFF" - "*/" } , "*/";
+
+(* Animation *)
+animation = "animation " , white_chars , variable , white_chars , "{" , white_chars , loop , white_chars , "," , white_chars , time_command_first , { white_chars , "," , white_chars , time_command} , white_chars , "}";
+loop = "loop" , white_chars , ":" , white_chars , ("yes" | "no");
+time_command_first = number , white_chars , ":" , white_chars , (object | variable);
+time_command = number , white_chars , ":" , white_chars , transformation , { white_chars , "*" , white_chars , transformation};
+
+(* Basic definifions *)
+letter = "A" | "B" | "C" | "D" | "E" | "F" | "G"
+       | "H" | "I" | "J" | "K" | "L" | "M" | "N"
+       | "O" | "P" | "Q" | "R" | "S" | "T" | "U"
+       | "V" | "W" | "X" | "Y" | "Z" | "a" | "b"
+       | "c" | "d" | "e" | "f" | "g" | "h" | "i"
+       | "j" | "k" | "l" | "m" | "n" | "o" | "p"
+       | "q" | "r" | "s" | "t" | "u" | "v" | "w"
+       | "x" | "y" | "z" ;
+digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
+non_zero = "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
+number = "0" | (non_zero , {digit});
+white_chars = { " " | "\n" | "\r" | "\t" }
+
+(* Geometrical transformations *)
+transformation = transform | move | rotate | scale | shearx, sheary;
+transform = "transform(" , 5 * ( white_chars , ["-"] , number , white_chars , "," ) , white_chars , ["-"] , number , white_chars , ")";
+move = "move(" , white_chars , ["-"] , number , white_chars , "," white_chars , ["-"] , number , white_chars , ")";
+rotate = "rotate(" , white_chars , ["-"] , number , white_chars , ")";
+scale = "scale(" , white_chars , ["-"] , number , white_chars , "," white_chars , ["-"] , number , white_chars , ")";
+shearx = "shearx(" , white_chars , ["-"] , number , white_chars , ")";
+sheary = "sheary(" , white_chars , ["-"] , number , white_chars , ")";
+
+(* Creating simple figures and colors *)
+object = circle | rectangle | triangle | polygon;
+circle = "circle(" , white_chars , number , white_chars , "," white_chars , color , white_chars , ")";
+rectangle = "rectangle(" , 4 * ( white_chars , ["-"] , number , white_chars , "," ) , white_chars , color , white_chars , ")";
+triangle = "rectangle(" , 6 * ( white_chars , ["-"] , number , white_chars , "," ) , white_chars , color , white_chars , ")";
+polygon = "polygon(" , { white_chars , ["-"] , number , white_chars , "," } , white_chars , color , white_chars , ")";
+color = "color(" , 2 * ( white_chars , ["-"] , number , white_chars , "," ) , white_chars , ["-"] , number , white_chars , ")";

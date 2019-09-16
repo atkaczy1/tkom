@@ -1,0 +1,10 @@
+/* animacja 3 */
+$kolo = circle(30,30,50, color(255,0,0));
+animation $a {loop:yes,
+ 0:$kolo,
+ 1:move(600, 0),
+ 2:move(0,400),
+ 3:move(-600,0),
+ 4:move(0,-400)
+};
+animate	$a;
